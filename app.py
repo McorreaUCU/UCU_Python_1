@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+import gdown
 
 #setea valor del titulo de la pagina
 
@@ -53,10 +54,19 @@ def cargar_datos():
         "NIVEL MÁS ALTO QUE CURSÓ",
         "REGIÓN", "AREA", "ACCESO A INTERNET"
     ]
-    df = pd.read_csv(
-        "data/processed/censo_procesado_todas_las_personas.csv",
-        usecols=cols, dtype=str
-    )
+
+    #false para usar el arvhivo desde processed o true para tomarlo desde drive (como es muy grande no sube a Git)
+    usar_drive = True
+
+    if usar_drive:
+        url = "https://drive.google.com/uc?id=1rfYhJATQoJ4S6dfQfFG810tMUTXxgGTa"
+        gdown.download(url, "censo_procesado_todas_las_personas.csv", quiet=True)
+        ruta = "censo_procesado_todas_las_personas.csv"
+    else:
+        ruta = "data/processed/censo_procesado_todas_las_personas.csv"
+
+    df = pd.read_csv(ruta, usecols=cols, dtype=str)
+
 
     # mapeamos dos columnas que no habiamos mapeado al crear el csv final.
     mapa_region = {"1": "Montevideo", "2": "Interior +5000 hab.",
